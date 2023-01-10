@@ -13,7 +13,7 @@ const TableRows = (props) => {
                 <td>
                     <DetailsModal name={props.name}
                                   year={props.year}
-                                  pantone={props.pantone_value}
+                                  pantone={props.pantone}
                                   color={props.color}
                     />
                 </td>
