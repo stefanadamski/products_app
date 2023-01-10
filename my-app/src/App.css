@@ -44,12 +44,13 @@
   filter: invert(1);
 }
 
-.product-list {
+.color-list {
+  width: 100%;
   margin-top: 30px;
   overflow-y: auto;
 }
 
-.products {
+.colors, .no-results {
   list-style: none;
   margin: 10px 0;
   padding: 10px;
@@ -61,17 +62,24 @@
   border-radius: 6px;
 }
 
-.product-id {
+.color-id {
   color: white;
   margin-right: 20px;
 }
 
-.product-name {
+.color-name-header {
+  width: 100px;
+  color: white;
+  text-align: left;
+  font-weight: 200;
+}
+
+.color-name {
   text-transform: uppercase;
   width: 100px;
 }
 
-.product-year {
+.color-year {
   margin-left: auto;
   color: white;
 }
@@ -90,4 +98,50 @@
   background: transparent;
   cursor: pointer;
   font-size: 16px;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination-button {
+  background: rgba(255,255,255,0.1);;
+  width: 120px;
+  height: 36px;
+  margin: 6px;
+  padding: 0 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Caveat Brush', cursive;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 6px;
+}
+
+.page-number {
+  width: 40px !important;
+}
+
+.previous-icon, .next-icon {
+  width: 20px;
+  height: 20px;
+  margin: 10px;
+  opacity: 0.5;
+  filter: invert(1);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 6px;
+}
+
+.previous-icon {
+  background-image: url("assets/caret-left-solid.svg");
+}
+
+.next-icon {
+  background-image: url("assets/caret-right-solid.svg");
 }

@@ -1,71 +1,99 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import DetailsModal from "./components/Modal";
+import TableRows from "./components/TableRows";
 
-function App(props) {
-    const [APIData, setAPIData] = useState([]);
+function App() {
+    const [colors, setColors] = useState([]);
+    const [foundColors, setFoundColors] = useState([]);
+    const [number, setNumber] = useState(1);
+    const [colorPerPage] = useState(5);
     const [id, setId] = useState('');
-    const [foundProducts, setFoundProducts] = useState(APIData);
 
     useEffect(() => {
         axios.get(`https://reqres.in/api/products`)
             .then((response) => {
-                setAPIData(response.data);
+                setColors(response.data.data);
             })
             .catch((error) => {
                 alert(error);
             })
     }, [])
 
+    const lastColor = number * colorPerPage;
+    const firstColor = lastColor - colorPerPage;
+    const currentColor = colors.slice(firstColor, lastColor);
+    const pageNumber = [];
+
+    for (let i = 1; i <= Math.ceil(colors.length / colorPerPage); i++) {
+        pageNumber.push(i);
+    }
+
+    const ChangePage = (pageNumber) => {
+        setNumber(pageNumber);
+    };
+
     const filter = (e) => {
         const value = e.target.value.replace(/\D/g, "");
 
         if (value !== '') {
-            const results = APIData.data.filter((product) => {
+            const results = colors.filter((product) => {
                 return product.id === Math.floor(value);
             });
-            setFoundProducts(results);
+            setFoundColors(results);
         } else {
-            setFoundProducts(APIData.data);
+            setFoundColors(colors.data);
         }
         setId(value);
     };
-  return (
-    <div className="container">
-        <div className="header">
-            <input
-                type="search"
-                value={id}
-                onChange={filter}
-                className="input"
-                placeholder="Szukaj po numerze ID"
-            />
-            <div className="picasso-logo"> </div>
+    return (
+        <div className="container">
+            <div className="header">
+                <input
+                    type="search"
+                    value={id}
+                    onChange={filter}
+                    className="input"
+                    placeholder="Szukaj po numerze ID"
+                />
+                <div className="picasso-logo"> </div>
+            </div>
+            <table className="color-list">
+                <thead>
+                    <tr className="colors">
+                        <th className="color-id">Id</th>
+                        <th className="color-name-header">Nazwa</th>
+                        <th> </th>
+                        <th className="color-year">Rok</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foundColors && foundColors.length > 0 ? (
+                    foundColors.map((color) => (
+                        <TableRows id={color.id} name={color.name} year={color.year} color={color.color} pantone={color.pantone_value}/>
+                    ))
+                ) : (
+                    currentColor.map((color) => (
+                        <TableRows id={color.id} name={color.name} year={color.year} color={color.color} pantone={color.pantone_value}/>
+                    ))
+                )}
+                </tbody>
+            </table>
+            <div className="pagination-buttons">
+                <button className="pagination-button" onClick={() => setNumber(number - 1)}>
+                   <div className="previous-icon"> </div> Poprzednia
+                </button>
+
+                {pageNumber.map((number) => (
+                    <button className="pagination-button page-number" onClick={() => ChangePage(number)}> {number} </button>
+                ))}
+
+                <button className="pagination-button" onClick={() => setNumber(number + 1)}>
+                    Następna <div className="next-icon"> </div>
+                </button>
+            </div>
         </div>
-        <div className="product-list">
-            {foundProducts && foundProducts.length > 0 ? (
-                foundProducts.map((product) => (
-                    <li key={product.id}
-                        className="products"
-                        style={{background: 'linear-gradient(to left, transparent 30%,' + product.color + ')'}}
-                    >
-                        <span className="product-id">{product.id}</span>
-                        <span className="product-name">{product.name}</span>
-                        <DetailsModal name={product.name}
-                                      year={product.year}
-                                      pantone={product.pantone_value}
-                                      color={product.color}
-                        />
-                        <span className="product-year">{product.year}</span>
-                    </li>
-                ))
-            ) : (
-                <div className="no-results">Brak wyników</div>
-            )}
-        </div>
-    </div>
-  );
+    );
 }
 
 export default App;
